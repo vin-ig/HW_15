@@ -1,121 +1,121 @@
 -- Типы животных
 
-create table animal_types(
-    id integer primary key autoincrement,
-    type varchar(100) not null
+CREATE TABLE animal_types(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type VARCHAR(100) NOT NULL
 );
 
-insert into animal_types (type)
-select distinct animal_type from animals;
+INSERT INTO animal_types (type)
+SELECT DISTINCT animal_type FROM animals;
 
 -- Породы
 
-create table breed(
-    id integer primary key,
-    breed varchar(100) not null
+CREATE TABLE breed(
+    id INTEGER PRIMARY KEY,
+    breed VARCHAR(100) NOT NULL
 );
 
-insert into breed (breed)
-select distinct breed from animals;
+INSERT INTO breed (breed)
+SELECT DISTINCT breed FROM animals;
 
 -- Цвета
 
-create table color_1(
-    id integer primary key autoincrement,
-    color varchar(50) not null
+CREATE TABLE color_1(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    color VARCHAR(50) NOT NULL
 );
 
-create table color_2(
-    id integer primary key autoincrement,
-    color varchar(50)
+CREATE TABLE color_2(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    color VARCHAR(50)
 );
 
-insert into color_1 (color)
-select distinct color1 from animals
-where color1 not null;
+INSERT INTO color_1 (color)
+SELECT DISTINCT color1 FROM animals
+WHERE color1 NOT NULL;
 
-insert into color_2 (color)
-select distinct color2 from animals
-where color2 not null;
+INSERT INTO color_2 (color)
+SELECT DISTINCT color2 FROM animals
+WHERE color2 NOT NULL;
 
 -- Программы
 
-create table outcome_subtypes(
-    id integer primary key autoincrement,
-    subtype varchar(50) not null
+CREATE TABLE outcome_subtypes(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    subtype VARCHAR(50) NOT NULL
 );
 
-insert into outcome_subtypes (subtype)
-select distinct outcome_subtype from animals
-where outcome_subtype not null;
+INSERT INTO outcome_subtypes (subtype)
+SELECT DISTINCT outcome_subtype FROM animals
+WHERE outcome_subtype NOT NULL;
 
 -- Что с животным сейчас
 
-create table outcome_types(
-    id integer primary key autoincrement,
-    type varchar(50) not null
+CREATE TABLE outcome_types(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type VARCHAR(50) NOT NULL
 );
 
-insert into outcome_types (type)
-select distinct outcome_type from animals
-where outcome_type not null;
+INSERT INTO outcome_types (type)
+SELECT DISTINCT outcome_type FROM animals
+WHERE outcome_type NOT NULL;
 
 -- Главная таблица
 
-create table main(
-    id  integer primary key autoincrement,
-    animal_id varchar(20) not null,
-    animal_type varchar(100),
-    name varchar(100),
-    date_of_birth date,
-    age_upon_outcome varchar(20),
-    breed varchar(100),
-    color1 varchar(100),
-    color2 varchar(100),
-    outcome_subtype varchar(50),
-    outcome_type varchar(50),
-    outcome_month integer,
-    outcome_year integer,
-    foreign key (animal_type) references animal_types(id),
-    foreign key (breed) references breed(id),
-    foreign key (color1) references color_1(id),
-    foreign key (color2) references color_2(id),
-    foreign key (outcome_subtype) references outcome_subtypes(id),
-    foreign key (outcome_type) references outcome_types(id)
+CREATE TABLE main(
+    id  INTEGER PRIMARY KEY AUTOINCREMENT,
+    animal_id VARCHAR(20) NOT NULL,
+    animal_type VARCHAR(100),
+    name VARCHAR(100),
+    date_of_birth DATE,
+    age_upon_outcome VARCHAR(20),
+    breed VARCHAR(100),
+    color1 VARCHAR(100),
+    color2 VARCHAR(100),
+    outcome_subtype VARCHAR(50),
+    outcome_type VARCHAR(50),
+    outcome_month INTEGER,
+    outcome_year INTEGER,
+    FOREIGN KEY (animal_type) REFERENCES animal_types(id),
+    FOREIGN KEY (breed) REFERENCES breed(id),
+    FOREIGN KEY (color1) REFERENCES color_1(id),
+    FOREIGN KEY (color2) REFERENCES color_2(id),
+    FOREIGN KEY (outcome_subtype) REFERENCES outcome_subtypes(id),
+    FOREIGN KEY (outcome_type) REFERENCES outcome_types(id)
 );
 
 -- Заполняем основную таблицу
 
-insert into main (animal_id, animal_type, name, date_of_birth, age_upon_outcome, breed,
+INSERT INTO main (animal_id, animal_type, name, date_of_birth, age_upon_outcome, breed,
                   color1, color2, outcome_subtype, outcome_type, outcome_month, outcome_year)
-select animal_id, animal_type, name, date_of_birth, age_upon_outcome, breed,
+SELECT animal_id, animal_type, name, date_of_birth, age_upon_outcome, breed,
                   color1, color2, outcome_subtype, outcome_type, outcome_month, outcome_year from animals;
 
 -- Обновляем столбцы
 
-update main
-set breed = (select id from breed
-where main.breed = breed.breed);
+UPDATE main
+SET breed = (SELECT id FROM breed
+WHERE main.breed = breed.breed);
 
-update main
-set animal_type = (select id from animal_types
-where main.animal_type = animal_types.type);
+UPDATE main
+SET animal_type = (SELECT id FROM animal_types
+WHERE main.animal_type = animal_types.type);
 
-update main
-set outcome_subtype = (select id from outcome_subtypes
-where main.outcome_subtype = outcome_subtypes.subtype);
+UPDATE main
+SET outcome_subtype = (SELECT id FROM outcome_subtypes
+WHERE main.outcome_subtype = outcome_subtypes.subtype);
 
-update main
-set outcome_type = (select id from outcome_types
-where main.outcome_type = outcome_types.type);
+UPDATE main
+SET outcome_type = (SELECT id FROM outcome_types
+WHERE main.outcome_type = outcome_types.type);
 
-update main
-set color1 = (select id from colors
-where main.color1 = colors.color);
+UPDATE main
+SET color1 = (SELECT id FROM colors
+WHERE main.color1 = colors.color);
 
-update main
-set color2 = (select id from colors
-where main.color2 = colors.color);
+UPDATE main
+SET color2 = (SELECT id FROM colors
+WHERE main.color2 = colors.color);
 
 -- Объединяем таблицы
 

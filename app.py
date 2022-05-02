@@ -7,7 +7,7 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 @app.route('/')
 def index():
-	"""Страница с фармой поиска по ID в базе"""
+	"""Страница с формой поиска по ID в базе"""
 	page = '''
 		<form action="/item/">
 		<input type=text name="item_id" placeholder="Введите ID животного">
