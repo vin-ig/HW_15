@@ -20,13 +20,23 @@ select distinct breed from animals;
 
 -- Цвета
 
-create table colors(
+create table color_1(
     id integer primary key autoincrement,
     color varchar(50) not null
 );
 
-insert into colors (color)
-select distinct color1 from animals;
+create table color_2(
+    id integer primary key autoincrement,
+    color varchar(50)
+);
+
+insert into color_1 (color)
+select distinct color1 from animals
+where color1 not null;
+
+insert into color_2 (color)
+select distinct color2 from animals
+where color2 not null;
 
 -- Программы
 
@@ -39,7 +49,7 @@ insert into outcome_subtypes (subtype)
 select distinct outcome_subtype from animals
 where outcome_subtype not null;
 
--- Программы
+-- Что с животным сейчас
 
 create table outcome_types(
     id integer primary key autoincrement,
@@ -68,8 +78,8 @@ create table main(
     outcome_year integer,
     foreign key (animal_type) references animal_types(id),
     foreign key (breed) references breed(id),
-    foreign key (color1) references colors(id),
-    foreign key (color2) references colors(id),
+    foreign key (color1) references color_1(id),
+    foreign key (color2) references color_2(id),
     foreign key (outcome_subtype) references outcome_subtypes(id),
     foreign key (outcome_type) references outcome_types(id)
 );
@@ -107,3 +117,22 @@ update main
 set color2 = (select id from colors
 where main.color2 = colors.color);
 
+-- Объединяем таблицы
+
+SELECT
+    main.id,
+    main.animal_id,
+    animal_types.type,
+    main.name,
+    main.date_of_birth,
+    breed.breed,
+    color_1.color,
+    color_2.color,
+    os.subtype
+FROM main
+LEFT JOIN animal_types ON main.animal_type = animal_types.id
+LEFT JOIN breed ON main.breed = breed.id
+LEFT JOIN color_1 ON main.color1 = color_1.id
+LEFT JOIN color_2 ON main.color2 = color_2.id
+LEFT JOIN outcome_subtypes os ON main.outcome_subtype = os.id
+LEFT JOIN outcome_types ot ON main.outcome_type = ot.id;
